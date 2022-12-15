@@ -8,9 +8,7 @@ pipeline{
   stages {
       stage("Maven Build"){
           steps{
-             script{
-                last_started=env.STAGE_NAME
-               }
+            
               sh 'mvn -B -DskipTests clean package'
              
           }
@@ -18,9 +16,7 @@ pipeline{
       }
       stage('Maven Test'){
             steps{
-               script{
-                  last_started=env.STAGE_NAME
-            }
+            
                 sh 'mvn test'
             }
             post{
@@ -29,6 +25,15 @@ pipeline{
             }
         }
         }
+     stage("Build & SonarQube analysis") {
+            agent any
+            steps {
+              withSonarQubeEnv('sonar-ci-challenge') {
+                sh 'java -version'
+                sh 'mvn clean package sonar:sonar'
+              }
+            }
+          }
      
     }
     post {  
