@@ -34,6 +34,21 @@ pipeline{
               }
             }
           }
+      stage('deploy to artifactory')
+     {
+     steps{
+      rtUpload (
+         serverId: 'jfrog-art',
+            spec: '''{
+                 "files": [
+            {
+              "pattern": "target/*.jar",
+              "target": "ci-challenge"
+            }
+         ]
+    }''',
+    )
+}}
      
     }
     post {  
